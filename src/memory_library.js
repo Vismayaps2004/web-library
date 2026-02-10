@@ -87,12 +87,7 @@ export class LibraryManagement {
 
   addBorrowRecord(record) {
     const bookDetails = this.#recieveBookRecord(record.book_id);
-    // console.log({ bookDetails });
-    // console.log(this.bookCatalog, record.book_id);
-
     if (!bookDetails) {
-      console.log("inside if");
-
       return { success: false, errorCode: 401 };
     }
     this.borrowId++;
