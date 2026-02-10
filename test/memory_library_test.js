@@ -72,36 +72,10 @@ describe("UPDATE QUANTITY", () => {
   });
 });
 
-describe("LIST BOOKS BY GENRE: ", () => {
+describe("LIST BOOKS BY CATEGORY: ", () => {
   let library;
   beforeEach(() => {
     library = new LibraryManagement();
-  });
-  it("=> should list one item in bookCatalog: 'Pinocchio'", () => {
-    const bookDetails = {
-      title: "Pinocchio",
-      genre_id: 1,
-      publish_year: 1883,
-      author: "Carlo Collodi",
-      quantity: 10,
-      price: 399,
-    };
-    const books = [{
-      book_id: 1,
-      title: "Pinocchio",
-      genre_id: 1,
-      publish_year: 1883,
-      author: "Carlo Collodi",
-      quantity: 10,
-      price: 399,
-    }];
-    library.addBook(bookDetails);
-    assertEquals(library.listBooksByGenre(1), {
-      success: true,
-      data: books,
-    });
-  });
-  it("=> should list all books: genre-Fiction", () => {
     const novelCategory = {
       title: "Pinocchio",
       genre_id: 1,
@@ -118,27 +92,34 @@ describe("LIST BOOKS BY GENRE: ", () => {
       price: 600,
       quantity: 5,
     };
-    const books = [{
-      book_id: 2,
-      title: "The Complete Sherlock Holmes,",
-      genre_id: 2,
-      publish_year: "2014-05-28",
-      author: "Arthur Conan Doyle",
-      price: 600,
-      quantity: 5,
-    }];
-
     library.addBook(novelCategory);
     library.addBook(fictionCategory);
-    assertEquals(library.listBooksByGenre(2), {
-      success: true,
-      data: books,
-    });
   });
-  it("=> should list empty: no books in library", () => {
-    assertEquals(library.listBooksByGenre(1), {
+
+  it("=> should list all records by category: 'novel'", () => {
+    const data = [
+      ["1", [{
+        book_id: 1,
+        title: "Pinocchio",
+        genre_id: 1,
+        publish_year: 1883,
+        author: "Carlo Collodi",
+        quantity: 10,
+        price: 399,
+      }]],
+      ["2", [{
+        book_id: 2,
+        title: "The Complete Sherlock Holmes,",
+        genre_id: 2,
+        publish_year: "2014-05-28",
+        author: "Arthur Conan Doyle",
+        price: 600,
+        quantity: 5,
+      }]],
+    ];
+    assertEquals(library.listBooksByCategory("genre_id"), {
       success: true,
-      data: [],
+      data,
     });
   });
 });

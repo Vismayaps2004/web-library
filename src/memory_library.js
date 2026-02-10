@@ -52,14 +52,24 @@ export class LibraryManagement {
     return { success: true };
   }
 
-  listBooksByGenre(genreId) {
-    const books = this.bookCatalog
-      .filter((book) => book.genre_id === genreId);
-    return { success: true, data: books };
-  }
-
   listBooks() {
     return { success: true, data: this.bookCatalog };
+  }
+
+  listBooksByCategory(category) {
+    const data = this.bookCatalog
+      .reduce((list, book) => {
+        const localCategory = book[category];
+        if (list[localCategory]) {
+          list[localCategory].push(book);
+          return list;
+        }
+
+        list[localCategory] = [];
+        list[localCategory].push(book);
+        return list;
+      }, {});
+    return { success: true, data: Object.entries(data) };
   }
 
   addUser(userName) {
