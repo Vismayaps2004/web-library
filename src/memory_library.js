@@ -3,9 +3,11 @@ export class LibraryManagement {
     this.bookCatalog = [];
     this.borrowRecord = [];
     this.genre = [];
+    this.user = [];
     this.bookId = 0;
     this.borrowId = 0;
     this.genreId = 0;
+    this.userId = 0;
   }
   #doesBookExists = (bookDetails) =>
     this.bookCatalog
@@ -14,6 +16,10 @@ export class LibraryManagement {
   #doesGenreExists = (genre) =>
     this.genre
       .some((genreDetail) => genreDetail.genre === genre);
+
+  #doesUserExists = (userName) =>
+    this.user
+      .some((userDetail) => userDetail.user_name === userName);
 
   #recieveBookRecord = (book_id) =>
     this.bookCatalog
@@ -61,6 +67,16 @@ export class LibraryManagement {
     this.genreId++;
     this.genre.push({ genre_id: this.genreId, genre });
 
+    return { success: true };
+  }
+
+  addUser(userName) {
+    if (this.#doesUserExists(userName)) {
+      return { success: false, errorCode: 212 };
+    }
+
+    this.userId++;
+    this.user.push({ user_id: this.userId, user_name: userName });
     return { success: true };
   }
 

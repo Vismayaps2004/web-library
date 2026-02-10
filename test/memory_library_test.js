@@ -249,3 +249,22 @@ describe("ADD GENRE: ", () => {
     assertEquals(library.addGenre("novel"), { success: false, errorCode: 211 });
   });
 });
+
+describe("ADD USER: ", () => {
+  let library;
+  beforeEach(() => {
+    library = new LibraryManagement();
+  });
+
+  it("=> should add a new user: ", () => {
+    assertEquals(library.addUser("vismaya"), { success: true });
+  });
+
+  it("=> shouldn't add user: user already exists", () => {
+    library.addUser("vismaya");
+    assertEquals(library.addUser("vismaya"), {
+      success: false,
+      errorCode: 212,
+    });
+  });
+});
