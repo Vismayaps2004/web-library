@@ -1,29 +1,32 @@
 export class LibraryManagement {
   constructor() {
     this.bookCatalog = [];
-    this.borrowRecord = [];
-    this.genre = [];
+    this.borrowRecords = [];
+    this.genre = [
+      { genre_id: 1, genre: "novel" },
+      { genre_id: 2, genre: "story" },
+      { genre_id: 3, genre: "poem" },
+    ];
     this.user = [];
     this.bookId = 0;
     this.borrowId = 0;
-    this.genreId = 0;
     this.userId = 0;
   }
   #doesBookExists = (bookDetails) =>
     this.bookCatalog
       .some((book) => book.title === bookDetails.title);
 
-  #doesGenreExists = (genre) =>
-    this.genre
-      .some((genreDetail) => genreDetail.genre === genre);
-
   #doesUserExists = (userName) =>
     this.user
       .some((userDetail) => userDetail.user_name === userName);
 
-  #recieveBookRecord = (book_id) =>
+  #recieveBookRecord = (bookId) =>
     this.bookCatalog
-      .find((book) => book.book_id === book_id);
+      .find((book) => book.book_id === bookId);
+
+  #recieveBorrowRecord = (borrowId) =>
+    this.borrowRecords
+      .find((borrowDetail) => borrowDetail.book_id === borrowId);
 
   addBook(bookDetails) {
     if (this.#doesBookExists(bookDetails)) {
@@ -59,17 +62,6 @@ export class LibraryManagement {
     return { success: true, data: this.bookCatalog };
   }
 
-  addGenre(genre) {
-    if (this.#doesGenreExists(genre)) {
-      return { success: false, errorCode: 211 };
-    }
-
-    this.genreId++;
-    this.genre.push({ genre_id: this.genreId, genre });
-
-    return { success: true };
-  }
-
   addUser(userName) {
     if (this.#doesUserExists(userName)) {
       return { success: false, errorCode: 212 };
@@ -87,7 +79,17 @@ export class LibraryManagement {
     }
     this.borrowId++;
 
-    this.borrowRecord.push({ borrow_id: this.borrowId, ...record });
+    this.borrowRecords.push({ borrow_id: this.borrowId, ...record });
+    return { success: true };
+  }
+
+  toggleStatus(borrowId) {
+    const borrowRecord = this.#recieveBorrowRecord(borrowId);
+    if (!borrowRecord) {
+      return { success: false, errorCode: 401 };
+    }
+
+    borrowRecord.status = 1 - borrowRecord.status;
     return { success: true };
   }
 }

@@ -235,21 +235,6 @@ describe.ignore("UPDATE LENT DATE: ", () => {
   });
 });
 
-describe("ADD GENRE: ", () => {
-  let library;
-  beforeEach(() => {
-    library = new LibraryManagement();
-  });
-  it("=> should add one record: genre table", () => {
-    assertEquals(library.addGenre("novel"), { success: true });
-  });
-
-  it("=> shouldn't add record: genre already exists", () => {
-    library.addGenre("novel");
-    assertEquals(library.addGenre("novel"), { success: false, errorCode: 211 });
-  });
-});
-
 describe("ADD USER: ", () => {
   let library;
   beforeEach(() => {
@@ -266,5 +251,36 @@ describe("ADD USER: ", () => {
       success: false,
       errorCode: 212,
     });
+  });
+});
+
+describe("TOGGLE STATUS: ", () => {
+  let library;
+  beforeEach(() => {
+    library = new LibraryManagement();
+    const novelCategory = {
+      title: "Pinocchio",
+      genre: "novel",
+      publish_year: 1883,
+      author: "Carlo Collodi",
+      quantity: 10,
+      price: 399,
+    };
+    library.addBook(novelCategory);
+    library.addBorrowRecord(
+      { user_id: 1, book_id: 1, borrow_date: "10-02-2026", status: 0 },
+    );
+  });
+
+  it("=> should toggle status: 0 -> 1", () => {
+    assertEquals(library.toggleStatus(1), { success: true });
+  });
+
+  it("=> should toggle status: 1 -> 0", () => {
+    assertEquals(library.toggleStatus(1), { success: true });
+  });
+
+  it("=> shouldn't toggle status: borrowId is not present", () => {
+    assertEquals(library.toggleStatus(2), { success: false, errorCode: 401 });
   });
 });
