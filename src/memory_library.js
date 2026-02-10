@@ -57,6 +57,9 @@ export class LibraryManagement {
   }
 
   listBooksByCategory(category) {
+    if (this.bookCatalog.length == 0) {
+      return { success: true, data: [] };
+    }
     const data = this.bookCatalog
       .reduce((list, book) => {
         const localCategory = book[category];

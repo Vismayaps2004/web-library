@@ -36,9 +36,9 @@ describe("ADDS BOOKS : ", () => {
 });
 
 describe("UPDATE QUANTITY", () => {
-  let libraryRegistry;
+  let library;
   beforeEach(() => {
-    libraryRegistry = new LibraryManagement();
+    library = new LibraryManagement();
   });
   it("=> should update quantity: 'Pinocchio'", () => {
     const bookDetails = {
@@ -50,8 +50,8 @@ describe("UPDATE QUANTITY", () => {
       price: 399,
     };
 
-    libraryRegistry.addBook(bookDetails);
-    assertEquals(libraryRegistry.updateQuantity(1, 1), { success: true });
+    library.addBook(bookDetails);
+    assertEquals(library.updateQuantity(1, 1), { success: true });
   });
 
   it("=> shouldn't update quantity: id not found", () => {
@@ -64,8 +64,8 @@ describe("UPDATE QUANTITY", () => {
       price: 399,
     };
 
-    libraryRegistry.addBook(bookDetails);
-    assertEquals(libraryRegistry.updateQuantity(2, 1), {
+    library.addBook(bookDetails);
+    assertEquals(library.updateQuantity(2, 1), {
       success: false,
       errorCode: 401,
     });
@@ -76,6 +76,8 @@ describe("LIST BOOKS BY CATEGORY: ", () => {
   let library;
   beforeEach(() => {
     library = new LibraryManagement();
+  });
+  it("=> should list all records by category: 'novel'", () => {
     const novelCategory = {
       title: "Pinocchio",
       genre_id: 1,
@@ -94,9 +96,6 @@ describe("LIST BOOKS BY CATEGORY: ", () => {
     };
     library.addBook(novelCategory);
     library.addBook(fictionCategory);
-  });
-
-  it("=> should list all records by category: 'novel'", () => {
     const data = [
       ["1", [{
         book_id: 1,
@@ -117,9 +116,16 @@ describe("LIST BOOKS BY CATEGORY: ", () => {
         quantity: 5,
       }]],
     ];
+
     assertEquals(library.listBooksByCategory("genre_id"), {
       success: true,
       data,
+    });
+  });
+  it("=> should list empty: no records in books", () => {
+    assertEquals(library.listBooksByCategory("genre_id"), {
+      success: true,
+      data: [],
     });
   });
 });
@@ -310,4 +316,14 @@ describe("LIST BOOKS BY USER: ", () => {
   it("should list empty: no records in borrowRecords", () => {
     assertEquals(library.listBooksByUser(2), { success: true, data: [] });
   });
+});
+
+describe.ignore("TESTING", () => {
+  beforeEach(() => {
+    console.log("inside beforeEach");
+  });
+  it("1st it", () => {});
+  it("2nd it", () => {});
+  it("3rd it", () => {});
+  it("4th it", () => {});
 });
