@@ -1,4 +1,4 @@
-import { handleListBooks } from "./handle_requests.js";
+import { handleListBooks, handleListByCategory } from "./handle_requests.js";
 import { LibraryManagement } from "./memory_library.js";
 
 const library = new LibraryManagement();
@@ -12,8 +12,10 @@ export const handleRequest = async (request) => {
     return await new Response(JSON.stringify(response));
   }
 
-  // if (pathName === "user/listBookByCategory" && method === "POST") {
-  //   const body = await request.json();
-  //   handleListBooksByCategory(library, body.category);
-  // }
+  if (pathName === "/user/listByCategory" && method === "POST") {
+    const body = await request.text();
+    const response = handleListByCategory(library, body.category);
+
+    return await new Response(JSON.stringify(response));
+  }
 };

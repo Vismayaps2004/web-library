@@ -12,3 +12,17 @@ describe("HANDLE LIST ALL RECORDS", () => {
     assertEquals(data.data, []);
   });
 });
+
+describe("HANDLE LIST ALL RECORDS BY CATEGORY", () => {
+  it("=> should give all records", async () => {
+    const requestURL = new Request("http://localhost/user/listByCategory", {
+      method: "POST",
+      body: "novel",
+    });
+    const response = await handleRequest(requestURL);
+    const data = await response.json();
+
+    assertEquals(data.success, true);
+    assertEquals(data.data, []);
+  });
+});

@@ -72,7 +72,7 @@ describe("UPDATE QUANTITY", () => {
   });
 });
 
-describe("LIST BOOKS BY CATEGORY: ", () => {
+describe("LIST BY CATEGORY: ", () => {
   let library;
   beforeEach(() => {
     library = new LibraryManagement();
@@ -117,13 +117,13 @@ describe("LIST BOOKS BY CATEGORY: ", () => {
       }]],
     ];
 
-    assertEquals(library.listBooksByCategory("genre_id"), {
+    assertEquals(library.listByCategory("genre_id"), {
       success: true,
       data,
     });
   });
   it("=> should list empty: no records in books", () => {
-    assertEquals(library.listBooksByCategory("genre_id"), {
+    assertEquals(library.listByCategory("genre_id"), {
       success: true,
       data: [],
     });

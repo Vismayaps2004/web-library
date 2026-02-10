@@ -56,7 +56,7 @@ export class LibraryManagement {
     return { success: true, data: this.bookCatalog };
   }
 
-  listBooksByCategory(category) {
+  listByCategory(category) {
     if (this.bookCatalog.length == 0) {
       return { success: true, data: [] };
     }
