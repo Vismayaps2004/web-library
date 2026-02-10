@@ -212,29 +212,6 @@ describe("ADD BORROW RECORDS: ", () => {
   });
 });
 
-describe.ignore("UPDATE LENT DATE: ", () => {
-  let library;
-  beforeEach(() => {
-    library = new LibraryManagement();
-    const novelCategory = {
-      title: "Pinocchio",
-      genre_id: 1,
-      publish_year: 1883,
-      author: "Carlo Collodi",
-      quantity: 10,
-      price: 399,
-    };
-    library.addBook(novelCategory);
-    library.addBorrowRecord({
-      user_id: 1,
-      book_id: 2,
-      borrow_date: "10-02-2026",
-    });
-
-    it("=> should update lent_date:");
-  });
-});
-
 describe("ADD USER: ", () => {
   let library;
   beforeEach(() => {
@@ -282,5 +259,74 @@ describe("TOGGLE STATUS: ", () => {
 
   it("=> shouldn't toggle status: borrowId is not present", () => {
     assertEquals(library.toggleStatus(2), { success: false, errorCode: 401 });
+  });
+});
+
+describe("UPDATE LENT DATE: ", () => {
+  let library;
+  beforeEach(() => {
+    library = new LibraryManagement();
+    const novelCategory = {
+      title: "Pinocchio",
+      genre_id: 1,
+      publish_year: 1883,
+      author: "Carlo Collodi",
+      quantity: 10,
+      price: 399,
+    };
+    library.addBook(novelCategory);
+    library.addBorrowRecord({
+      user_id: 1,
+      book_id: 2,
+      borrow_date: "10-02-2026",
+    });
+  });
+
+  it("=> should update lent date: ", () => {
+    const date = new Date();
+    const borrowRecord = {
+      borrow_id: 1,
+      user_id: 1,
+      book_id: 2,
+      borrow_date: "10-02-2026",
+    };
+    library.updateLentDate(borrowRecord, date);
+  });
+});
+
+describe("LIST BOOKS BY USER: ", () => {
+  let library;
+  beforeEach(() => {
+    library = new LibraryManagement();
+    const novelCategory = {
+      title: "Pinocchio",
+      genre_id: 1,
+      publish_year: 1883,
+      author: "Carlo Collodi",
+      quantity: 10,
+      price: 399,
+    };
+    library.addBook(novelCategory);
+  });
+  it("=> should list all records: ", () => {
+    library.addBorrowRecord({
+      user_id: 1,
+      book_id: 1,
+      borrow_date: "10-02-2026",
+    });
+    const borrowRecords = [{
+      borrow_id: 1,
+      user_id: 1,
+      book_id: 1,
+      borrow_date: "10-02-2026",
+    }];
+    assertEquals(library.listBooksByUser(1), {
+      success: true,
+      data: borrowRecords,
+    });
+  });
+
+  it("should list empty: no records in borrowRecords", () => {
+    assertEquals(library.listBooksByUser(2), { success: true, data: [] });
   });
 });

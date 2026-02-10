@@ -26,7 +26,7 @@ export class LibraryManagement {
 
   #recieveBorrowRecord = (borrowId) =>
     this.borrowRecords
-      .find((borrowDetail) => borrowDetail.book_id === borrowId);
+      .find((borrowDetail) => borrowDetail.borrow_id === borrowId);
 
   addBook(bookDetails) {
     if (this.#doesBookExists(bookDetails)) {
@@ -90,6 +90,19 @@ export class LibraryManagement {
     }
 
     borrowRecord.status = 1 - borrowRecord.status;
+    const date = new Date();
+    this.updateLentDate(borrowRecord, date);
     return { success: true };
+  }
+
+  updateLentDate(borrowRecord, date) {
+    borrowRecord.lent_date = date;
+    return { success: true };
+  }
+
+  listBooksByUser(userId) {
+    const data = this.borrowRecords
+      .filter((borrowRecord) => borrowRecord.user_id === userId);
+    return { success: true, data };
   }
 }
