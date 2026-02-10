@@ -1,32 +1,30 @@
 import { assertEquals } from "@std/assert";
 import { beforeEach, describe, it } from "@std/testing";
-import { LibraryRegistry } from "../src/memory_library.js";
+import { LibraryManagement } from "../src/memory_library.js";
 
 describe("ADDS BOOKS : ", () => {
-  let libraryRegistry;
+  let library;
   beforeEach(() => {
-    libraryRegistry = new LibraryRegistry();
+    library = new LibraryManagement();
   });
   it("=> should add a new book to bookCatalog: 'Pinocchio'", () => {
     const bookDetails = {
-      id: 1,
       name: "Pinocchio",
       catrgory: "story",
       price: 399,
       quantity: 10,
     };
-    assertEquals(libraryRegistry.addBook(bookDetails), { success: true });
+    assertEquals(library.addBook(bookDetails), { success: true });
   });
   it("=> shouldn't add a book to bookCatalog: book already exists", () => {
     const bookDetails = {
-      id: 1,
       name: "Pinocchio",
       catrgory: "story",
       price: 399,
       quantity: 10,
     };
-    libraryRegistry.addBook(bookDetails);
-    assertEquals(libraryRegistry.addBook(bookDetails), {
+    library.addBook(bookDetails);
+    assertEquals(library.addBook(bookDetails), {
       success: false,
       errorCode: 201,
     });
@@ -36,18 +34,84 @@ describe("ADDS BOOKS : ", () => {
 describe("UPDATE QUANTITY", () => {
   let libraryRegistry;
   beforeEach(() => {
-    libraryRegistry = new LibraryRegistry();
+    libraryRegistry = new LibraryManagement();
   });
   it("=> should update quantity: pinocchio", () => {
     const bookDetails = {
-      id: 1,
       name: "Pinocchio",
-      catrgory: "story",
+      catrgory: "novel",
       price: 399,
       quantity: 10,
     };
 
     libraryRegistry.addBook(bookDetails);
     assertEquals(libraryRegistry.updateQuantity(1, 1), { success: true });
+  });
+
+  it("=> shouldn't update quantity: id not found", () => {
+    const bookDetails = {
+      name: "Pinocchio",
+      catrgory: "novel",
+      price: 399,
+      quantity: 10,
+    };
+
+    libraryRegistry.addBook(bookDetails);
+    assertEquals(libraryRegistry.updateQuantity(2, 1), {
+      success: false,
+      errorCode: 401,
+    });
+  });
+});
+
+describe("LIST BOOKS: ", () => {
+  let library;
+  beforeEach(() => {
+    library = new LibraryManagement();
+  });
+  it("=> should list one item in bookCatalog: pinocchio", () => {
+    const bookDetails = {
+      name: "Pinocchio",
+      category: "novel",
+      price: 399,
+      quantity: 10,
+    };
+    const books = [{
+      book_id: 1,
+      name: "Pinocchio",
+      category: "novel",
+      price: 399,
+      quantity: 10,
+    }];
+    library.addBook(bookDetails);
+    assertEquals(library.listBooks("novel"), { success: true, data: books });
+  });
+  it("=> should list all books: category-poem", () => {
+    const novelCategory = {
+      name: "Pinocchio",
+      category: "novel",
+      price: 399,
+      quantity: 10,
+    };
+    const poemCategory = {
+      name: "Home",
+      category: "poem",
+      price: 600,
+      quantity: 5,
+    };
+    const books = [{
+      book_id: 2,
+      name: "Home",
+      category: "poem",
+      price: 600,
+      quantity: 5,
+    }];
+
+    library.addBook(novelCategory);
+    library.addBook(poemCategory);
+    assertEquals(library.listBooks("poem"), { success: true, data: books });
+  });
+  it("=> should list empty: no books in library", () => {
+    assertEquals(library.listBooks("novel"), { success: true, data: [] });
   });
 });
