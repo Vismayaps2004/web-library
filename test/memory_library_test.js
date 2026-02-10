@@ -234,3 +234,18 @@ describe.ignore("UPDATE LENT DATE: ", () => {
     it("=> should update lent_date:");
   });
 });
+
+describe("ADD GENRE: ", () => {
+  let library;
+  beforeEach(() => {
+    library = new LibraryManagement();
+  });
+  it("=> should add one record: genre table", () => {
+    assertEquals(library.addGenre("novel"), { success: true });
+  });
+
+  it("=> shouldn't add record: genre already exists", () => {
+    library.addGenre("novel");
+    assertEquals(library.addGenre("novel"), { success: false, errorCode: 211 });
+  });
+});

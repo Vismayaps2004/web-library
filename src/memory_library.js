@@ -2,12 +2,18 @@ export class LibraryManagement {
   constructor() {
     this.bookCatalog = [];
     this.borrowRecord = [];
+    this.genre = [];
     this.bookId = 0;
     this.borrowId = 0;
+    this.genreId = 0;
   }
   #doesBookExists = (bookDetails) =>
     this.bookCatalog
       .some((book) => book.title === bookDetails.title);
+
+  #doesGenreExists = (genre) =>
+    this.genre
+      .some((genreDetail) => genreDetail.genre === genre);
 
   #recieveBookRecord = (book_id) =>
     this.bookCatalog
@@ -38,8 +44,6 @@ export class LibraryManagement {
   }
 
   listBooksByGenre(genreId) {
-    console.log(this.bookCatalog, genreId);
-
     const books = this.bookCatalog
       .filter((book) => book.genre_id === genreId);
     return { success: true, data: books };
@@ -49,9 +53,19 @@ export class LibraryManagement {
     return { success: true, data: this.bookCatalog };
   }
 
+  addGenre(genre) {
+    if (this.#doesGenreExists(genre)) {
+      return { success: false, errorCode: 211 };
+    }
+
+    this.genreId++;
+    this.genre.push({ genre_id: this.genreId, genre });
+
+    return { success: true };
+  }
+
   addBorrowRecord(record) {
     const bookDetails = this.#recieveBookRecord(record.book_id);
-
     if (!bookDetails) {
       return { success: false, errorCode: 401 };
     }
