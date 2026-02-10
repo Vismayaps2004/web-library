@@ -1,7 +1,7 @@
-import { handleRequest } from "./src/server_library.js";
+import { createRequestHandler } from "./src/server_library.js";
 
 const main = () => {
-  Deno.serve(handleRequest);
+  Deno.serve(createRequestHandler);
 };
 
 main();
