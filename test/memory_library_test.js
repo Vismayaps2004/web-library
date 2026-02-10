@@ -115,3 +115,35 @@ describe("LIST BOOKS: ", () => {
     assertEquals(library.listBooks("novel"), { success: true, data: [] });
   });
 });
+
+describe("ADD BORROW RECORDS: ", () => {
+  let library;
+  beforeEach(() => {
+    library = new LibraryManagement();
+    const novelCategory = {
+      name: "Pinocchio",
+      category: "novel",
+      price: 399,
+      quantity: 10,
+    };
+    library.addBook(novelCategory);
+  });
+
+  it("=> should add new borrow_record", () => {
+    const borrowRecord = library.addBorrowRecord({
+      user_name: "vismaya",
+      book_id: 1,
+      borrow_date: "10-02-2026",
+    });
+    assertEquals(borrowRecord, { success: true });
+  });
+
+  it("=> shouldn't add a record: book_id is not present", () => {
+    const borrowRecord = library.addBorrowRecord({
+      user_name: "vismaya",
+      book_id: 2,
+      borrow_date: "10-02-2026",
+    });
+    assertEquals(borrowRecord, { success: false, errorCode: 401 });
+  });
+});

@@ -1,6 +1,7 @@
 export class LibraryManagement {
   constructor() {
     this.bookCatalog = [];
+    this.borrowRecord = [];
     this.bookId = 0;
   }
   #doesBookExists = (bookDetails) =>
@@ -35,5 +36,17 @@ export class LibraryManagement {
     const books = this.bookCatalog
       .filter((book) => book.category === category);
     return { success: true, data: books };
+  }
+
+  addBorrowRecord(record) {
+    const bookDetails = this.bookCatalog
+      .find((book) => book.book_id === record.book_id);
+
+    if (!bookDetails) {
+      return { success: false, errorCode: 401 };
+    }
+
+    this.borrowRecord.push(record);
+    return { success: true };
   }
 }
