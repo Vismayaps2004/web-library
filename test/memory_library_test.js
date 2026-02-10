@@ -9,19 +9,23 @@ describe("ADDS BOOKS : ", () => {
   });
   it("=> should add a new book to bookCatalog: 'Pinocchio'", () => {
     const bookDetails = {
-      name: "Pinocchio",
-      catrgory: "story",
-      price: 399,
+      title: "Pinocchio",
+      genre: "story",
+      publish_year: 1883,
+      author: "Carlo Collodi",
       quantity: 10,
+      price: 399,
     };
     assertEquals(library.addBook(bookDetails), { success: true });
   });
   it("=> shouldn't add a book to bookCatalog: book already exists", () => {
     const bookDetails = {
-      name: "Pinocchio",
-      catrgory: "story",
-      price: 399,
+      title: "Pinocchio",
+      genre: "story",
+      publish_year: 1883,
+      author: "Carlo Collodi",
       quantity: 10,
+      price: 399,
     };
     library.addBook(bookDetails);
     assertEquals(library.addBook(bookDetails), {
@@ -36,12 +40,14 @@ describe("UPDATE QUANTITY", () => {
   beforeEach(() => {
     libraryRegistry = new LibraryManagement();
   });
-  it("=> should update quantity: pinocchio", () => {
+  it("=> should update quantity: 'Pinocchio'", () => {
     const bookDetails = {
-      name: "Pinocchio",
-      catrgory: "novel",
-      price: 399,
+      title: "Pinocchio",
+      genre_id: 1,
+      publish_year: 1883,
+      author: "Carlo Collodi",
       quantity: 10,
+      price: 399,
     };
 
     libraryRegistry.addBook(bookDetails);
@@ -50,10 +56,12 @@ describe("UPDATE QUANTITY", () => {
 
   it("=> shouldn't update quantity: id not found", () => {
     const bookDetails = {
-      name: "Pinocchio",
-      catrgory: "novel",
-      price: 399,
+      title: "Pinocchio",
+      genre_id: 1,
+      publish_year: 1883,
+      author: "Carlo Collodi",
       quantity: 10,
+      price: 399,
     };
 
     libraryRegistry.addBook(bookDetails);
@@ -64,55 +72,107 @@ describe("UPDATE QUANTITY", () => {
   });
 });
 
-describe("LIST BOOKS: ", () => {
+describe("LIST BOOKS BY GENRE: ", () => {
   let library;
   beforeEach(() => {
     library = new LibraryManagement();
   });
-  it("=> should list one item in bookCatalog: pinocchio", () => {
+  it("=> should list one item in bookCatalog: 'Pinocchio'", () => {
     const bookDetails = {
-      name: "Pinocchio",
-      category: "novel",
-      price: 399,
+      title: "Pinocchio",
+      genre_id: 1,
+      publish_year: 1883,
+      author: "Carlo Collodi",
       quantity: 10,
+      price: 399,
     };
     const books = [{
       book_id: 1,
-      name: "Pinocchio",
-      category: "novel",
-      price: 399,
+      title: "Pinocchio",
+      genre_id: 1,
+      publish_year: 1883,
+      author: "Carlo Collodi",
       quantity: 10,
+      price: 399,
     }];
     library.addBook(bookDetails);
-    assertEquals(library.listBooks("novel"), { success: true, data: books });
+    assertEquals(library.listBooksByGenre(1), {
+      success: true,
+      data: books,
+    });
   });
-  it("=> should list all books: category-poem", () => {
+  it("=> should list all books: genre-Fiction", () => {
     const novelCategory = {
-      name: "Pinocchio",
-      category: "novel",
-      price: 399,
+      title: "Pinocchio",
+      genre_id: 1,
+      publish_year: 1883,
+      author: "Carlo Collodi",
       quantity: 10,
+      price: 399,
     };
-    const poemCategory = {
-      name: "Home",
-      category: "poem",
+    const fictionCategory = {
+      title: "The Complete Sherlock Holmes,",
+      genre_id: 2,
+      publish_year: "2014-05-28",
+      author: "Arthur Conan Doyle",
       price: 600,
       quantity: 5,
     };
     const books = [{
       book_id: 2,
-      name: "Home",
-      category: "poem",
+      title: "The Complete Sherlock Holmes,",
+      genre_id: 2,
+      publish_year: "2014-05-28",
+      author: "Arthur Conan Doyle",
       price: 600,
       quantity: 5,
     }];
 
     library.addBook(novelCategory);
-    library.addBook(poemCategory);
-    assertEquals(library.listBooks("poem"), { success: true, data: books });
+    library.addBook(fictionCategory);
+    assertEquals(library.listBooksByGenre(2), {
+      success: true,
+      data: books,
+    });
   });
   it("=> should list empty: no books in library", () => {
-    assertEquals(library.listBooks("novel"), { success: true, data: [] });
+    assertEquals(library.listBooksByGenre(1), {
+      success: true,
+      data: [],
+    });
+  });
+});
+
+describe("LIST BOOKS: ", () => {
+  let library;
+  beforeEach(() => {
+    library = new LibraryManagement();
+  });
+  it("=> should list all items in book catalog: ", () => {
+    const novelCategory = {
+      title: "Pinocchio",
+      genre_id: 1,
+      publish_year: 1883,
+      author: "Carlo Collodi",
+      quantity: 10,
+      price: 399,
+    };
+    const books = [{
+      book_id: 1,
+      title: "Pinocchio",
+      genre_id: 1,
+      publish_year: 1883,
+      author: "Carlo Collodi",
+      quantity: 10,
+      price: 399,
+    }];
+
+    library.addBook(novelCategory);
+    assertEquals(library.listBooks(), { success: true, data: books });
+  });
+
+  it("should list empty: no books in bookCatalog", () => {
+    assertEquals(library.listBooks(), { success: true, data: [] });
   });
 });
 
@@ -121,29 +181,56 @@ describe("ADD BORROW RECORDS: ", () => {
   beforeEach(() => {
     library = new LibraryManagement();
     const novelCategory = {
-      name: "Pinocchio",
-      category: "novel",
-      price: 399,
+      title: "Pinocchio",
+      genre_id: 1,
+      publish_year: 1883,
+      author: "Carlo Collodi",
       quantity: 10,
+      price: 399,
     };
     library.addBook(novelCategory);
   });
 
   it("=> should add new borrow_record", () => {
     const borrowRecord = library.addBorrowRecord({
-      user_name: "vismaya",
+      user_id: 1,
       book_id: 1,
       borrow_date: "10-02-2026",
+      status: 0,
     });
     assertEquals(borrowRecord, { success: true });
   });
 
   it("=> shouldn't add a record: book_id is not present", () => {
     const borrowRecord = library.addBorrowRecord({
-      user_name: "vismaya",
+      user_id: 1,
+      book_id: 2,
+      borrow_date: "10-02-2026",
+      status: 0,
+    });
+    assertEquals(borrowRecord, { success: false, errorCode: 401 });
+  });
+});
+
+describe.ignore("UPDATE LENT DATE: ", () => {
+  let library;
+  beforeEach(() => {
+    library = new LibraryManagement();
+    const novelCategory = {
+      title: "Pinocchio",
+      genre_id: 1,
+      publish_year: 1883,
+      author: "Carlo Collodi",
+      quantity: 10,
+      price: 399,
+    };
+    library.addBook(novelCategory);
+    library.addBorrowRecord({
+      user_id: 1,
       book_id: 2,
       borrow_date: "10-02-2026",
     });
-    assertEquals(borrowRecord, { success: false, errorCode: 401 });
+
+    it("=> should update lent_date:");
   });
 });
