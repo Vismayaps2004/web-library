@@ -116,6 +116,7 @@ export class LibraryManagement {
   listBooksByUser(userId) {
     const data = this.borrowRecords
       .filter((borrowRecord) => borrowRecord.user_id === userId);
+
     return { success: true, data };
   }
 }

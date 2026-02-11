@@ -2,6 +2,7 @@ import {
   handleAddBorrowRecord,
   handleListBooks,
   handleListByCategory,
+  handleListByUser,
   handleToggleStatus,
 } from "./handle_requests.js";
 
@@ -10,6 +11,7 @@ const PATHS = {
   "/user/listByCategory": handleListByCategory,
   "/user/addBorrowRecord": handleAddBorrowRecord,
   "/user/toggleStatus": handleToggleStatus,
+  "/user/listByUser": handleListByUser,
 };
 
 export const handleRequest = async (request, library) => {

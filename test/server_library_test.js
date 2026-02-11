@@ -2,6 +2,7 @@ import { beforeEach, describe, it } from "@std/testing";
 import { assertEquals } from "@std/assert/equals";
 import { handleRequest } from "../src/server_library.js";
 import { LibraryManagement } from "../src/memory_library.js";
+import { handleListBooks } from "../src/handle_requests.js";
 
 describe("HANDLE LIST ALL RECORDS", () => {
   let library;
@@ -231,5 +232,59 @@ describe("TOGGLE STATUS: ", () => {
     const response = await handleRequest(request, library);
     const data = await response.json();
     assertEquals(data.success, false);
+  });
+});
+
+describe("LIST BOOKS BY USER: ", () => {
+  let library;
+  beforeEach(() => {
+    library = new LibraryManagement();
+  });
+
+  it("=> should list books by user: ", async () => {
+    const novelCategory = {
+      title: "Pinocchio",
+      genre: "story",
+      publish_year: 1883,
+      author: "Carlo Collodi",
+      quantity: 10,
+      price: 399,
+    };
+    library.addBook(novelCategory);
+    const borrowRecord = {
+      user_id: 1,
+      book_id: 1,
+      borrow_date: "10-02-2026",
+      status: 0,
+    };
+    library.addBorrowRecord(borrowRecord);
+    const userData = [{
+      borrow_id: 1,
+      user_id: 1,
+      book_id: 1,
+      borrow_date: "10-02-2026",
+      status: 0,
+    }];
+    const request = new Request("http://localhost/user/listByUser", {
+      method: "POST",
+      body: 1,
+    });
+    const response = await handleRequest(request, library);
+    const data = await response.json();
+
+    assertEquals(data.success, true);
+    assertEquals(data.data, userData);
+  });
+
+  it("=> should give empty array: user doesn't take any book", async () => {
+    const request = new Request("http://localhost/user/listByUser", {
+      method: "POST",
+      body: 1,
+    });
+    const response = await handleRequest(request, library);
+    const data = await response.json();
+
+    assertEquals(data.success, true);
+    assertEquals(data.data, []);
   });
 });

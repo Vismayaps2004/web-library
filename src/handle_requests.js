@@ -27,3 +27,8 @@ export const handleToggleStatus = (library, borrowId) => {
   }
   return { response, status: 401 };
 };
+
+export const handleListByUser = (library, userId) => {
+  const response = library.listBooksByUser(userId);
+  return { response, status: 200 };
+};
