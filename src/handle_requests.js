@@ -18,3 +18,12 @@ export const handleAddBorrowRecord = (library, borrowRecord) => {
   }
   return { response, status: 401 };
 };
+
+export const handleToggleStatus = (library, borrowId) => {
+  const response = library.toggleStatus(borrowId);
+
+  if (response.success) {
+    return { response, status: 200 };
+  }
+  return { response, status: 401 };
+};

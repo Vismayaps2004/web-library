@@ -50,11 +50,11 @@ describe("HANDLE LIST ALL RECORDS BY CATEGORY", () => {
     library = new LibraryManagement();
   });
   it("=> should give empty array: no books", async () => {
-    const requestURL = new Request("http://localhost/user/listByCategory", {
+    const request = new Request("http://localhost/user/listByCategory", {
       method: "POST",
       body: JSON.stringify({ category: "genre_id" }),
     });
-    const response = await handleRequest(requestURL, library);
+    const response = await handleRequest(request, library);
     const data = await response.json();
 
     assertEquals(data.success, true);
@@ -101,11 +101,11 @@ describe("HANDLE LIST ALL RECORDS BY CATEGORY", () => {
       }]],
     ];
 
-    const requestURL = new Request("http://localhost/user/listByCategory", {
+    const request = new Request("http://localhost/user/listByCategory", {
       method: "POST",
       body: JSON.stringify({ category: "genre_id" }),
     });
-    const response = await handleRequest(requestURL, library);
+    const response = await handleRequest(request, library);
     const data = await response.json();
     assertEquals(data.success, true);
     assertEquals(data.data, bookDetails);
@@ -134,11 +134,11 @@ describe("HANDLE ADD BORROW RECORD: ", () => {
       status: 0,
     };
 
-    const requestURL = new Request("http://localhost/user/addBorrowRecord", {
+    const request = new Request("http://localhost/user/addBorrowRecord", {
       method: "POST",
       body: JSON.stringify(borrowRecord),
     });
-    const response = await handleRequest(requestURL, library);
+    const response = await handleRequest(request, library);
     const data = await response.json();
 
     assertEquals(data.success, true);
@@ -151,14 +151,85 @@ describe("HANDLE ADD BORROW RECORD: ", () => {
       status: 0,
     };
 
-    const requestURL = new Request("http://localhost/user/addBorrowRecord", {
+    const request = new Request("http://localhost/user/addBorrowRecord", {
       method: "POST",
       body: JSON.stringify(borrowRecord),
     });
-    const response = await handleRequest(requestURL, library);
+    const response = await handleRequest(request, library);
     const data = await response.json();
 
     assertEquals(data.success, false);
     assertEquals(data.errorCode, 401);
+  });
+});
+
+describe("TOGGLE STATUS: ", () => {
+  let library;
+  beforeEach(() => {
+    library = new LibraryManagement();
+  });
+
+  it("=> should toggle status: 0 -> 1", async () => {
+    const novelCategory = {
+      title: "Pinocchio",
+      genre: "story",
+      publish_year: 1883,
+      author: "Carlo Collodi",
+      quantity: 10,
+      price: 399,
+    };
+    library.addBook(novelCategory);
+    const borrowRecord = {
+      user_id: 1,
+      book_id: 1,
+      borrow_date: "10-02-2026",
+      status: 0,
+    };
+    library.addBorrowRecord(borrowRecord);
+
+    const request = new Request("http://localhost/user/toggleStatus", {
+      method: "POST",
+      body: 1,
+    });
+    const response = await handleRequest(request, library);
+    const data = await response.json();
+    assertEquals(data.success, true);
+  });
+
+  it("=> should toggle status: 1 -> 0", async () => {
+    const novelCategory = {
+      title: "Pinocchio",
+      genre: "story",
+      publish_year: 1883,
+      author: "Carlo Collodi",
+      quantity: 10,
+      price: 399,
+    };
+    library.addBook(novelCategory);
+    const borrowRecord = {
+      user_id: 1,
+      book_id: 1,
+      borrow_date: "10-02-2026",
+      status: 0,
+    };
+    library.addBorrowRecord(borrowRecord);
+
+    const request = new Request("http://localhost/user/toggleStatus", {
+      method: "POST",
+      body: 1,
+    });
+    const response = await handleRequest(request, library);
+    const data = await response.json();
+    assertEquals(data.success, true);
+  });
+
+  it("=> shouldn't toggle : no book taken", async () => {
+    const request = new Request("http://localhost/user/toggleStatus", {
+      method: "POST",
+      body: 1,
+    });
+    const response = await handleRequest(request, library);
+    const data = await response.json();
+    assertEquals(data.success, false);
   });
 });

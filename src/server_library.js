@@ -2,13 +2,14 @@ import {
   handleAddBorrowRecord,
   handleListBooks,
   handleListByCategory,
+  handleToggleStatus,
 } from "./handle_requests.js";
-import { LibraryManagement } from "./memory_library.js";
 
 const PATHS = {
   "/user/listBooks": handleListBooks,
   "/user/listByCategory": handleListByCategory,
   "/user/addBorrowRecord": handleAddBorrowRecord,
+  "/user/toggleStatus": handleToggleStatus,
 };
 
 export const handleRequest = async (request, library) => {
