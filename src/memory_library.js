@@ -93,6 +93,7 @@ export class LibraryManagement {
     this.borrowId++;
 
     this.borrowRecords.push({ borrow_id: this.borrowId, ...record });
+    this.updateQuantity(record.book_id, -1);
     return { success: true };
   }
 
@@ -110,6 +111,7 @@ export class LibraryManagement {
 
   updateLentDate(borrowRecord, date) {
     borrowRecord.lent_date = date;
+    this.updateQuantity(borrowRecord.book_id, 1);
     return { success: true };
   }
 
