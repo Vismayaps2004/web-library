@@ -288,3 +288,43 @@ describe("LIST BOOKS BY USER: ", () => {
     assertEquals(data.data, []);
   });
 });
+
+describe("ADD BOOK: ", () => {
+  let library;
+  let novelCategory;
+  beforeEach(() => {
+    library = new LibraryManagement();
+    novelCategory = {
+      title: "Pinocchio",
+      genre: "story",
+      publish_year: 1883,
+      author: "Carlo Collodi",
+      quantity: 10,
+      price: 399,
+    };
+  });
+  it("=> should add one book to book_catalog: ", async () => {
+    const request = new Request("http://localhost/admin/addBook", {
+      method: "POST",
+      body: JSON.stringify(novelCategory),
+    });
+
+    const response = await handleRequest(request, library);
+    const data = await response.json();
+    assertEquals(data.success, true);
+  });
+
+  it("=> shouldn't add book: book already exists ", async () => {
+    library.addBook(novelCategory);
+    const request = new Request("http://localhost/admin/addBook", {
+      method: "POST",
+      body: JSON.stringify(novelCategory),
+    });
+
+    const response = await handleRequest(request, library);
+    const data = await response.json();
+
+    assertEquals(data.success, false);
+    assertEquals(data.errorCode, 201);
+  });
+});

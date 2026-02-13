@@ -32,3 +32,12 @@ export const handleListByUser = (library, userId) => {
   const response = library.listBooksByUser(userId);
   return { response, status: 200 };
 };
+
+export const handleAddBook = (library, bookRecord) => {
+  const response = library.addBook(bookRecord);
+
+  if (response.success) {
+    return { response, status: 200 };
+  }
+  return { response, status: 201 };
+};
