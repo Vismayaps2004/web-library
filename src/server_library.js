@@ -27,7 +27,6 @@ export const handleRequest = async (request, library) => {
 
   const body = await request.json();
   const { response, status } = PATHS[pathName](library, body);
-
   return await new Response(JSON.stringify(response), { status });
 };
 
